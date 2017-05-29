@@ -98,7 +98,7 @@ class Kint
      * @var array Kint_Renderer descendants. Add to array to extend.
      */
     public static $renderers = array(
-        self::MODE_RICH => 'Kint_Renderer_Rich',
+        self::MODE_RICH => 'Kint_Renderer_RichVue',
         self::MODE_PLAIN => 'Kint_Renderer_Plain',
         self::MODE_TEXT => 'Kint_Renderer_Text',
         self::MODE_CLI => 'Kint_Renderer_Cli',
