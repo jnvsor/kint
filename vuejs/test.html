@@ -1,0 +1,34 @@
+
+<div class="kint-rich" id="ttt">
+    <krv-obj ap="test.test">
+        <template slot="h">This is the header</template>
+
+        <krv-tab label="test">
+            <krv-obj ap="test.test[0]">
+                <template slot="h">This is the header</template>
+
+                <krv-tab label="test">
+                    Contents
+                </krv-tab>
+                <krv-tab label="test2">
+                    Contents2
+                </krv-tab>
+            </krv-obj>
+            <krv-obj ap="test.test[1]">
+                <template slot="h">This is the header</template>
+
+                <krv-tab label="test">
+                    <krv-obj>
+                        <template slot="h">value</template>
+                    </krv-obj>
+                </krv-tab>
+                <krv-tab label="test2">
+                    <pre>text</pre>
+                </krv-tab>
+            </krv-obj>
+        </krv-tab>
+        <krv-tab label="test2">
+            Contents2
+        </krv-tab>
+    </krv-obj>
+</div>
