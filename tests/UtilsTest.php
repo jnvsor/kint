@@ -36,38 +36,6 @@ class UtilsTest extends TestCase
     protected $installed_stash;
     protected $composer_test_dir;
 
-    protected function setUp()
-    {
-        parent::setUp();
-
-        if (\getenv('KINT_FILE')) {
-            $this->composer_test_dir = \dirname(__DIR__);
-        } else {
-            $this->composer_test_dir = KINT_DIR;
-        }
-
-        $this->composer_stash = \file_get_contents($this->composer_test_dir.'/composer.json');
-        $this->installed_stash = \file_get_contents($this->composer_test_dir.'/vendor/composer/installed.json');
-    }
-
-    protected function tearDown()
-    {
-        parent::tearDown();
-
-        if ($this->composer_stash) {
-            \file_put_contents($this->composer_test_dir.'/composer.json', $this->composer_stash);
-            \file_put_contents($this->composer_test_dir.'/vendor/composer/installed.json', $this->installed_stash);
-            $this->composer_stash = null;
-            $this->installed_stash = null;
-            if (\file_exists($this->composer_test_dir.'/composer/installed.json')) {
-                \unlink($this->composer_test_dir.'/composer/installed.json');
-            }
-            if (\file_exists($this->composer_test_dir.'/composer')) {
-                \rmdir($this->composer_test_dir.'/composer');
-            }
-        }
-    }
-
     public function testConstruct()
     {
         $u = new ReflectionMethod('Kint\\Utils', '__construct');
@@ -493,5 +461,37 @@ class UtilsTest extends TestCase
         $param = new ReflectionParameter(['Kint\\Test\\Fixtures\\TestClass', 'arrayHint'], 'x');
 
         $this->assertSame('array', Utils::getTypeString($param->getType()));
+    }
+
+    protected function kintUp()
+    {
+        parent::kintUp();
+
+        if (\getenv('KINT_FILE')) {
+            $this->composer_test_dir = \dirname(__DIR__);
+        } else {
+            $this->composer_test_dir = KINT_DIR;
+        }
+
+        $this->composer_stash = \file_get_contents($this->composer_test_dir.'/composer.json');
+        $this->installed_stash = \file_get_contents($this->composer_test_dir.'/vendor/composer/installed.json');
+    }
+
+    protected function kintDown()
+    {
+        parent::kintDown();
+
+        if ($this->composer_stash) {
+            \file_put_contents($this->composer_test_dir.'/composer.json', $this->composer_stash);
+            \file_put_contents($this->composer_test_dir.'/vendor/composer/installed.json', $this->installed_stash);
+            $this->composer_stash = null;
+            $this->installed_stash = null;
+            if (\file_exists($this->composer_test_dir.'/composer/installed.json')) {
+                \unlink($this->composer_test_dir.'/composer/installed.json');
+            }
+            if (\file_exists($this->composer_test_dir.'/composer')) {
+                \rmdir($this->composer_test_dir.'/composer');
+            }
+        }
     }
 }

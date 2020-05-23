@@ -23,18 +23,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-$aliases = [
-    'PHPUnit\\Framework\\Constraint\\Constraint' => 'PHPUnit_Framework_Constraint',
-    'PHPUnit\\Framework\\Error\\Warning' => 'PHPUnit_Framework_Error_Warning',
-    'PHPUnit\\Framework\\Exception' => 'PHPUnit_Framework_Exception',
-    'PHPUnit\\Util\\InvalidArgumentHelper' => 'PHPUnit_Util_InvalidArgumentHelper',
-    // PHPUnit's built in "Forward-compatability" breaks forward compatability...
-    // So this one is backwards
-    'PHPUnit_Framework_AssertionFailedError' => 'PHPUnit\\Framework\\AssertionFailedError',
-];
-
-foreach ($aliases as $new => $old) {
-    if (\class_exists($old) && !\class_exists($new)) {
-        \class_alias($old, $new);
-    }
+if (\version_compare(PHP_VERSION, '7.1') < 0) {
+    \class_alias('Kint\\Test\\Kint7TestCase', 'Kint\\Test\\KintTestCase');
 }

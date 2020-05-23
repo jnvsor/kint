@@ -155,7 +155,7 @@ class CallFinder
         $tokens = \token_get_all($source);
         $cursor = 1;
         $function_calls = [];
-        /** @var array<int, null|array|string> Performance optimization preventing backwards loops */
+        // Performance optimization preventing backwards loops
         $prev_tokens = [null, null, null];
 
         if (\is_array($function)) {

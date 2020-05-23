@@ -23,33 +23,23 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-namespace Kint\Parser;
+namespace Kint\Test;
 
-use Kint\Zval\Value;
+use PHPUnit\Framework\TestCase;
 
-abstract class Plugin
+class Kint7TestCase extends TestCase
 {
-    protected $parser;
+    use KintTestTrait;
 
-    public function setParser(Parser $p)
+    protected function setUp()
     {
-        $this->parser = $p;
+        parent::setUp();
+        self::kintUp();
     }
 
-    /**
-     * An array of types (As returned by gettype) for all data this plugin can operate on.
-     *
-     * @return array List of types
-     */
-    public function getTypes()
+    protected function tearDown()
     {
-        return [];
+        parent::tearDown();
+        self::kintDown();
     }
-
-    public function getTriggers()
-    {
-        return Parser::TRIGGER_NONE;
-    }
-
-    abstract public function parse(&$var, Value &$o, $trigger);
 }

@@ -4,10 +4,9 @@ stage: tests
 
 php:
   - 7.4
-  - nightly
-  - 7.3
-  - 7.2
-  - 7.1
+  # - 7.3
+  # - 7.2
+  # - 7.1
 
 before_install:
   - nvm install 10
@@ -35,53 +34,58 @@ jobs:
     - php: nightly
 
   include:
-    - php: 5.6
+    # - php: 5.6
+    #   install:
+    #     - composer remove --dev phpunit/phpunit friendsofphp/php-cs-fixer vimeo/psalm
+    #     - composer config --unset platform.php
+    #     - composer update
+    #     - composer require --dev phpunit/phpunit ^5
+
+    # - php: 7.0
+    #   install:
+    #     - composer remove --dev phpunit/phpunit friendsofphp/php-cs-fixer vimeo/psalm
+    #     - composer config --unset platform.php
+    #     - composer update
+    #     - composer require --dev phpunit/phpunit ^5
+
+    - php: nightly
       install:
-        - composer remove --dev phpunit/phpunit friendsofphp/php-cs-fixer vimeo/psalm
-        - composer config --unset platform.php
+        - composer remove --dev friendsofphp/php-cs-fixer vimeo/psalm
         - composer update
-        - composer require --dev phpunit/phpunit ^5
 
-    - php: 7.0
-      install:
-        - composer remove --dev phpunit/phpunit friendsofphp/php-cs-fixer vimeo/psalm
-        - composer config --unset platform.php
-        - composer update
-        - composer require --dev phpunit/phpunit ^5
+    # # Check if `composer format` was run correctly
+    # - stage: analysis
+    #   install: composer install
+    #   script:
+    #     - composer format
+    #     - git status # Required to flush the cache
+    #     - git diff-files --quiet --exit-code
+    #   env: analysis_type="composer format"
 
-    # Check if `composer format` was run correctly
-    - stage: analysis
-      install: composer install
-      script:
-        - composer format
-        - git status # Required to flush the cache
-        - git diff-files --quiet --exit-code
-      env: analysis_type="composer format"
+    # # Check if `composer build` was run correctly
+    # - stage: analysis
+    #   install: composer install
+    #   script:
+    #     - composer clean
+    #     # - composer build
+    #     # Travis is broken and screws with permissions. This breaks the build.
+    #     # Instead we build sass and js then manually fix permissions before
+    #     # building the phar file to ensure reproducibility.
+    #     - composer build:sass
+    #     - composer build:js
+    #     - chmod -R g-w .
+    #     - composer build:php
+    #     - git status # Required to flush the cache
+    #     - git diff-files --quiet --exit-code
+    #   env: analysis_type="composer build"
 
-    # Check if `composer build` was run correctly
-    - stage: analysis
-      install: composer install
-      script:
-        - composer clean
-        # - composer build
-        # Travis is broken and screws with permissions. This breaks the build.
-        # Instead we build sass and js then manually fix permissions before
-        # building the phar file to ensure reproducibility.
-        - composer build:sass
-        - composer build:js
-        - chmod -R g-w .
-        - composer build:php
-        - git status # Required to flush the cache
-        - git diff-files --quiet --exit-code
-      env: analysis_type="composer build"
+    # # Check if code passes phpstan/psalm static analysis
+    # - stage: analysis
+    #   install: composer install
+    #   script: composer analyze
+    #   env: analysis_type="composer analyze"
 
-    # Check if code passes phpstan/psalm static analysis
-    - stage: analysis
-      install: composer install
-      script: composer analyze
-      env: analysis_type="composer analyze"
-
-    # Preliminary test run
-    - stage: analysis
-      install: composer install
-      script: php ./vendor/bin/phpunit tests
+    # # Preliminary test run
+    # - stage: analysis
+    #   install: composer install
+    #   script: php ./vendor/bin/phpunit tests
