@@ -27,7 +27,7 @@
         "phpunit/phpunit": "^9.0",
         "symfony/finder": "^3.0 || ^4.0 || ^5.0",
         "seld/phar-utils": "^1.0",
-        "vimeo/psalm": "^4"
+        "vimeo/psalm": "dev-master"
     },
     "autoload": {
         "files": ["init.php"],
@@ -46,7 +46,7 @@
         }
     },
     "scripts": {
-        "post-update-cmd": "npm ci",
+        "post-update-cmd": "true",
         "post-install-cmd": "@post-update-cmd",
         "clean": [
             "rm -rf resources/compiled/",
