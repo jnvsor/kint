@@ -102,7 +102,7 @@ class KintTest extends KintTestCase
             'expanded' => true,
             'return' => true,
             'display_called_from' => true,
-            'max_depth' => 42,
+            'depth_limit' => 42,
             'plugins' => [$p1, $p2, $p3, $p4],
         ];
 
@@ -207,12 +207,12 @@ class KintTest extends KintTestCase
 
         // Set up defaults
         $k->setStatesFromStatics([
-            'max_depth' => 42,
+            'depth_limit' => 42,
         ]);
 
         $k->setStatesFromCallInfo(['foo' => 'bar']);
 
-        $this->assertSame(['max_depth' => 42], $r->getStatics());
+        $this->assertSame(['depth_limit' => 42], $r->getStatics());
         $this->assertSame(
             [
                 'params' => null,
