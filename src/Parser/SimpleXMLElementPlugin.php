@@ -56,6 +56,12 @@ class SimpleXMLElementPlugin extends Plugin
             return;
         }
 
+        // An invalid SimpleXMLElement can gum up the works with
+        // warnings if we call stuff children/attributes on it.
+        if (!$var) {
+            return;
+        }
+
         $x = new SimpleXMLElementValue();
         $x->transplant($o);
 
