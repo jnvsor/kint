@@ -1,0 +1,86 @@
+name: tests
+on: [push, pull_request]
+jobs:
+  test-analysis:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        analysis:
+          - name: code formatting
+            steps:
+              - composer format
+              - git status # Required to flush the cache
+              - git diff-files --quiet --exit-code
+          - name: build
+            steps:
+              - composer clean
+              - composer build
+              # - composer build:sass
+              # - composer build:js
+              # - chmod -R g-w .
+              # - composer build:php
+              - git status # Required to flush the cache
+              - git diff-files --quiet --exit-code
+          - name: psalm static analysis
+            steps:
+              - composer analyze
+          - name: basic test
+            steps:
+              - php ./vendor/bin/phpunit tests
+    name: 'Analysis: ${{ matrix.analysis.name }}'
+    steps:
+      - uses: actions/setup-node@v1
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+      - uses: actions/checkout@v2
+      - run: composer install
+      - run: ${{ matrix.analysis.steps }}
+  tests:
+    needs: test-analysis
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions:
+          - 7.4
+          - 8.0
+          - 8.1
+          - nightly
+        files:
+          - ./vendor/bin/phpunit
+          - ./tests/phpunit-phar.php
+    name: 'PHP ${{ matrix.php-versions }} tests'
+    steps:
+      - uses: actions/setup-node@v1
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+      - uses: actions/checkout@v2
+      - run: composer install
+      - run: php ${{ matrix.files }} tests
+  old-tests:
+    needs: test-analysis
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-versions:
+          - 5.6
+          - 7.0
+          - 7.1
+          - 7.2
+          - 7.3
+        files:
+          - ./vendor/bin/phpunit
+          - ./tests/phpunit-phar.php
+    name: PHP ${{ matrix.php-versions }} tests
+    steps:
+      - uses: actions/setup-node@v1
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+      - uses: actions/checkout@v2
+      - run: composer remove --dev phpunit/phpunit friendsofphp/php-cs-fixer vimeo/psalm phpspec/prophecy-phpunit
+      - run: composer config --unset platform.php
+      - run: composer update
+      - run: composer require --dev phpunit/phpunit ^5
+      - run: php ${{ matrix.files }} tests
