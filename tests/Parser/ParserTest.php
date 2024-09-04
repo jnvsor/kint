@@ -37,6 +37,7 @@ use Kint\Test\Fixtures\ChildTestClass;
 use Kint\Test\Fixtures\Php74ChildTestClass;
 use Kint\Test\Fixtures\Php74TestClass;
 use Kint\Test\Fixtures\Php81TestClass;
+use Kint\Test\Fixtures\Php84TestClass;
 use Kint\Test\Fixtures\TestClass;
 use Kint\Test\KintTestCase;
 use Kint\Zval\BlobValue;
@@ -819,6 +820,97 @@ class ParserTest extends KintTestCase
         $this->assertSame('$v->pub2', $properties['pub2']->access_path);
         $this->assertSame('$v->pro2', $properties['pro2']->access_path);
         $this->assertNull($properties['pri2']->access_path);
+    }
+
+    public function testParseGettersSetters()
+    {
+        $b = new Value('$v');
+        $b->access_path = '$v';
+        $v = new Php84TestClass();
+
+        $p = new Parser();
+        $o = $p->parse($v, clone $b);
+
+        $props = $o->value->contents;
+
+        $this->assertSame('a', $props[0]->name);
+        $this->assertSame(Value::ACCESS_PUBLIC, $props[0]->access);
+        $this->assertFalse($props[0]->virtual);
+        $this->assertSame(Value::HOOK_GET | Value::HOOK_SET, $props[0]->hooks);
+        $this->assertSame('uninitialized', $props[0]->type);
+
+        $this->assertSame('b', $props[1]->name);
+        $this->assertSame(Value::ACCESS_PROTECTED, $props[1]->access);
+        $this->assertFalse($props[1]->virtual);
+        $this->assertSame(Value::HOOK_GET, $props[1]->hooks);
+        $this->assertSame('uninitialized', $props[1]->type);
+
+        $this->assertSame('c', $props[2]->name);
+        $this->assertSame(Value::ACCESS_PRIVATE, $props[2]->access);
+        $this->assertFalse($props[2]->virtual);
+        $this->assertSame(Value::HOOK_SET, $props[2]->hooks);
+        $this->assertSame('uninitialized', $props[2]->type);
+
+        $this->assertSame('d', $props[3]->name);
+        $this->assertSame(Value::ACCESS_PRIVATE, $props[3]->access);
+        $this->assertTrue($props[3]->virtual);
+        $this->assertSame(Value::HOOK_GET | Value::HOOK_SET, $props[3]->hooks);
+        $this->assertSame('virtual', $props[3]->type);
+
+        $this->assertSame('e', $props[4]->name);
+        $this->assertSame(Value::ACCESS_PROTECTED, $props[4]->access);
+        $this->assertTrue($props[4]->virtual);
+        $this->assertSame(Value::HOOK_GET, $props[4]->hooks);
+        $this->assertSame('virtual', $props[4]->type);
+
+        $this->assertSame('f', $props[5]->name);
+        $this->assertSame(Value::ACCESS_PUBLIC, $props[5]->access);
+        $this->assertTrue($props[5]->virtual);
+        $this->assertSame(Value::HOOK_SET, $props[5]->hooks);
+        $this->assertSame('virtual', $props[5]->type);
+
+        $v->a = 5;
+        $v->f = 10;
+        $v->c = 4;
+
+        $this->assertSame('a', $props[0]->name);
+        $this->assertSame(Value::ACCESS_PUBLIC, $props[0]->access);
+        $this->assertFalse($props[0]->virtual);
+        $this->assertSame(Value::HOOK_GET | Value::HOOK_SET, $props[0]->hooks);
+        $this->assertSame('int', $props[0]->type);
+        $this->assertSame(6, $props[0]->value->contents);
+
+        $this->assertSame('b', $props[1]->name);
+        $this->assertSame(Value::ACCESS_PROTECTED, $props[1]->access);
+        $this->assertFalse($props[1]->virtual);
+        $this->assertSame(Value::HOOK_GET, $props[1]->hooks);
+        $this->assertSame('int', $props[1]->type);
+        $this->assertSame(9, $props[1]->value->contents);
+
+        $this->assertSame('c', $props[2]->name);
+        $this->assertSame(Value::ACCESS_PRIVATE, $props[2]->access);
+        $this->assertFalse($props[2]->virtual);
+        $this->assertSame(Value::HOOK_SET, $props[2]->hooks);
+        $this->assertSame('int', $props[2]->type);
+        $this->assertSame(8, $props[2]->value->contents);
+
+        $this->assertSame('d', $props[3]->name);
+        $this->assertSame(Value::ACCESS_PRIVATE, $props[3]->access);
+        $this->assertTrue($props[3]->virtual);
+        $this->assertSame(Value::HOOK_GET | Value::HOOK_SET, $props[3]->hooks);
+        $this->assertSame('virtual', $props[3]->type);
+
+        $this->assertSame('e', $props[4]->name);
+        $this->assertSame(Value::ACCESS_PROTECTED, $props[4]->access);
+        $this->assertTrue($props[4]->virtual);
+        $this->assertSame(Value::HOOK_GET, $props[4]->hooks);
+        $this->assertSame('virtual', $props[4]->type);
+
+        $this->assertSame('f', $props[5]->name);
+        $this->assertSame(Value::ACCESS_PUBLIC, $props[5]->access);
+        $this->assertTrue($props[5]->virtual);
+        $this->assertSame(Value::HOOK_SET, $props[5]->hooks);
+        $this->assertSame('virtual', $props[5]->type);
     }
 
     /**

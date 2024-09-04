@@ -420,7 +420,8 @@ class Parser
         $rep = new Representation('Properties');
         $rep->contents = [];
 
-        $readonly = [];
+        $readonly_props = [];
+        $hook_props = [];
 
         // Reflection is both slower and more painful to use than array casting
         // We only use it to identify readonly and uninitialized properties
@@ -437,29 +438,64 @@ class Parser
                 }
 
                 $rprop->setAccessible(true);
+                $name = $rprop->getName();
+                $hooks = [];
+                $virtual = false;
 
                 if (KINT_PHP81 && $rprop->isReadOnly()) {
                     if ($rprop->isPublic()) {
-                        $readonly[$rprop->getName()] = true;
+                        $readonly_props[$name] = true;
                     } elseif ($rprop->isProtected()) {
-                        $readonly["\0*\0".$rprop->getName()] = true;
+                        $readonly_props["\0*\0".$name] = true;
                     } elseif ($rprop->isPrivate()) {
-                        $readonly["\0".$rprop->getDeclaringClass()->getName()."\0".$rprop->getName()] = true;
+                        $readonly_props["\0".$rprop->getDeclaringClass()->getName()."\0".$name] = true;
                     }
                 }
 
-                if ($rprop->isInitialized($var)) {
+                if (KINT_PHP84) {
+                    $hooks = $rprop->getHooks();
+                    if ($hooks) {
+                        if ($rprop->isPublic()) {
+                            $hook_props[$name] = $hooks;
+                        } elseif ($rprop->isProtected()) {
+                            $hook_props["\0*\0".$name] = $hooks;
+                        } elseif ($rprop->isPrivate()) {
+                            $hook_props["\0".$rprop->getDeclaringClass()->getName()."\0".$name] = $hooks;
+                        }
+                    }
+
+                    $virtual = $rprop->isVirtual();
+                }
+
+                if (!$virtual) {
+                    $initialized = $rprop->isInitialized($var);
+                }
+
+                if (!$virtual && $initialized) {
                     continue;
                 }
 
                 $uninitialized = null;
 
-                $child = new Value($rprop->getName());
-                $child->type = 'uninitialized';
+                $child = new Value($name);
+
+                if (!$initialized) {
+                    $child->type = 'uninitialized';
+                } else {
+                    $child->type = 'virtual';
+                }
+
                 $child->depth = $object->depth + 1;
                 $child->owner_class = $rprop->getDeclaringClass()->getName();
                 $child->operator = Value::OPERATOR_OBJECT;
                 $child->readonly = KINT_PHP81 && $rprop->isReadOnly();
+                $child->virtual = $virtual;
+                if (isset($hooks['get'])) {
+                    $child->hooks |= Value::HOOK_GET;
+                }
+                if (isset($hooks['set'])) {
+                    $child->hooks |= Value::HOOK_SET;
+                }
 
                 if ($rprop->isPublic()) {
                     $child->access = Value::ACCESS_PUBLIC;
@@ -496,7 +532,13 @@ class Parser
             $child->operator = Value::OPERATOR_OBJECT;
             $child->access = Value::ACCESS_PUBLIC;
             $child->reference = null !== ReflectionReference::fromArrayElement($values, $key);
-            $child->readonly = isset($readonly[$key]);
+            $child->readonly = isset($readonly_props[$key]);
+            if (isset($hooks[$key]['get'])) {
+                $child->hooks |= Value::HOOK_GET;
+            }
+            if (isset($hooks[$key]['set'])) {
+                $child->hooks |= Value::HOOK_SET;
+            }
 
             $split_key = \explode("\0", (string) $key, 3);
 

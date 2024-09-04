@@ -44,6 +44,10 @@ class Value
     public const OPERATOR_OBJECT = 2;
     public const OPERATOR_STATIC = 3;
 
+    public const HOOK_NONE = 0;
+    public const HOOK_GET = 1 << 0;
+    public const HOOK_SET = 1 << 1;
+
     /** @psalm-var ValueName */
     public $name;
     public ?string $type = null;
@@ -58,6 +62,9 @@ class Value
     /** @psalm-var self::OPERATOR_* */
     public int $operator = self::OPERATOR_NONE;
     public bool $reference = false;
+    public bool $virtual = false;
+    /** @psalm-var self::HOOK_* */
+    public int $hook = self::HOOK_NONE;
     public int $depth = 0;
     public ?int $size = null;
     /** @psalm-var array<string, true> */
