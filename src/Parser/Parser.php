@@ -453,6 +453,9 @@ class Parser
                 }
 
                 if (KINT_PHP84) {
+                    var_dump($name);
+                    ob_flush();
+                    flush();
                     $hooks = $rprop->getHooks();
                     if ($hooks) {
                         if ($rprop->isPublic()) {
