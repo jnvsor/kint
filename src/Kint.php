@@ -126,7 +126,7 @@ class Kint implements FacadeInterface
     ];
 
     /**
-     * @psalm-var array<RendererInterface|class-string<ConstructableRendererInterface>>
+     * @psalm-var array<class-string<ConstructableRendererInterface>|RendererInterface>
      *
      * Array of modes to renderer class names
      */
@@ -138,7 +138,7 @@ class Kint implements FacadeInterface
     ];
 
     /**
-     * @psalm-var array<PluginInterface|class-string<ConstructablePluginInterface>>
+     * @psalm-var array<class-string<ConstructablePluginInterface>|PluginInterface>
      */
     public static array $plugins = [
         \Kint\Parser\ArrayLimitPlugin::class,

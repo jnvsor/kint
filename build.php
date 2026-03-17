@@ -51,6 +51,7 @@ require \'phar://\'.__FILE__.\'/init_phar.php\'; __HALT_COMPILER();');
 $pathlen = \strlen(__DIR__);
 
 $filesToArchive = Finder::create()
+    ->useUnixPaths()
     ->files()
     ->in([__DIR__.'/src', __DIR__.'/resources/compiled'])
     ->append([
@@ -59,15 +60,6 @@ $filesToArchive = Finder::create()
         __DIR__.'/init_helpers.php',
     ])
     ->sortByName();
-
-if (KINT_WIN) {
-    $filesToArchive->sort(static function (SplFileInfo $a, SplFileInfo $b) {
-        $a = \strtr($a->getRealPath() ?: $a->getPathname(), '\\', '/');
-        $b = \strtr($b->getRealPath() ?: $b->getPathname(), '\\', '/');
-
-        return \strcmp($a, $b);
-    });
-}
 
 foreach ($filesToArchive as $file) {
     $local = \substr((string) $file, $pathlen);

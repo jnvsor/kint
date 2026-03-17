@@ -208,7 +208,7 @@ class CallFinder
         $function_calls = [];
 
         // Performance optimization preventing backwards loops
-        /** @psalm-var array<PhpToken|null> */
+        /** @psalm-var array<null|PhpToken> */
         $prev_tokens = [null, null, null];
 
         if (\is_array($function)) {
