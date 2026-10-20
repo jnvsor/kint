@@ -50,8 +50,8 @@ use Kint\Value\UninitializedValue;
  * @psalm-type KintCallInfo = array{
  *   params: ?list<CallParameter>,
  *   modifiers: array,
- *   callee: ?callable,
- *   caller: ?callable,
+ *   callee: ?TraceFrame,
+ *   caller: ?TraceFrame,
  *   trace: TraceFrame[],
  * }
  *
