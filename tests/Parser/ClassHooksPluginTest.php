@@ -172,7 +172,7 @@ class ClassHooksPluginTest extends KintTestCase
         $b = new BaseContext('$v');
         $b->access_path = '$v';
         $v = new Php84ChildTestClass();
-        $o = new InstanceValue($b, \get_class($v), \spl_object_hash($v), \spl_object_id($v));
+        $o = new InstanceValue($b, \get_class($v), @\spl_object_hash($v), \spl_object_id($v));
 
         $out = $chp->parseComplete($v, $o, Parser::TRIGGER_SUCCESS);
         $this->assertSame($o, $out);

@@ -372,7 +372,7 @@ class Parser
 
     private function parseObject(object &$var, ContextInterface $c): AbstractValue
     {
-        $hash = \spl_object_hash($var);
+        $hash = @\spl_object_hash($var);
         $classname = \get_class($var);
 
         if (isset($this->object_hashes[$hash])) {

@@ -383,7 +383,7 @@ class ParserTest extends KintTestCase
         $this->assertSame('object', $o->getType());
         $this->assertSame('List', $o->getDisplayName());
         $this->assertSame(ChildTestClass::class, $o->getClassName());
-        $this->assertSame(\spl_object_hash($v), $o->getSplObjectHash());
+        $this->assertSame(@\spl_object_hash($v), $o->getSplObjectHash());
         $this->assertSame(\spl_object_id($v), $o->getSplObjectId());
 
         $props = $o->getChildren();
@@ -589,7 +589,7 @@ class ParserTest extends KintTestCase
         $this->assertSame('object', $o->getType());
         $this->assertSame('List', $o->getDisplayName());
         $this->assertSame(__PHP_Incomplete_Class::class, $o->getClassName());
-        $this->assertSame(\spl_object_hash($v), $o->getSplObjectHash());
+        $this->assertSame(@\spl_object_hash($v), $o->getSplObjectHash());
         $this->assertSame(\spl_object_id($v), $o->getSplObjectId());
         $this->assertNotNull($o->getContext()->getAccessPath());
 

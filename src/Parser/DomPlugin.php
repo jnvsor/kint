@@ -274,7 +274,7 @@ class DomPlugin extends AbstractPlugin implements PluginBeginInterface
         }
 
         if (isset(self::$blacklist[$prop])) {
-            $b = new InstanceValue($c, \get_class($value), \spl_object_hash($value), \spl_object_id($value));
+            $b = new InstanceValue($c, \get_class($value), @\spl_object_hash($value), \spl_object_id($value));
             $b->flags |= AbstractValue::FLAG_GENERATED | AbstractValue::FLAG_BLACKLIST;
 
             return $b;
@@ -311,7 +311,7 @@ class DomPlugin extends AbstractPlugin implements PluginBeginInterface
         if ($var instanceof NodeList || $var instanceof DOMNodeList) {
             $v = new DomNodeListValue($c, $var);
         } else {
-            $v = new InstanceValue($c, \get_class($var), \spl_object_hash($var), \spl_object_id($var));
+            $v = new InstanceValue($c, \get_class($var), @\spl_object_hash($var), \spl_object_id($var));
         }
 
         $parser = $this->getParser();

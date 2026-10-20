@@ -65,7 +65,7 @@ class ProfilePlugin extends AbstractPlugin implements PluginBeginInterface, Plug
         }
 
         if (\is_object($var)) {
-            $hash = \spl_object_hash($var);
+            $hash = @\spl_object_hash($var);
             $this->instance_counts[$hash] ??= 0;
             $this->instance_complexity[$hash] ??= 0;
             $this->instance_count_stack[$hash] ??= 0;

@@ -179,7 +179,7 @@ class MysqliPluginTest extends KintTestCase
         $this->assertEquals($obj1, $obj2);
 
         $v = new Mysqli();
-        $obj1 = new InstanceValue($base, \get_class($v), \spl_object_hash($v), \spl_object_id($v));
+        $obj1 = new InstanceValue($base, \get_class($v), @\spl_object_hash($v), \spl_object_id($v));
 
         $obj2 = $m->parseComplete($v, $obj1, Parser::TRIGGER_SUCCESS);
 

@@ -53,7 +53,7 @@ class DateTimeValueTest extends KintTestCase
         $this->assertSame('2024-09-28 22:53:30.123400 +02:00 CEST', $v->getDisplayValue());
         $this->assertSame($b, $v->getContext());
         $this->assertSame(DateTime::class, $v->getClassName());
-        $this->assertSame(\spl_object_hash($dt), $v->getSplObjectHash());
+        $this->assertSame(@\spl_object_hash($dt), $v->getSplObjectHash());
         $this->assertSame(\spl_object_id($dt), $v->getSplObjectId());
     }
 
