@@ -522,11 +522,11 @@ class CallFinder
                     'literal' => $literal,
                     'new_without_parens' => $new_without_parens,
                 ];
-            }
 
-            // Skip first-class callables
-            if (KINT_PHP81 && 1 === \count($formatted_parameters) && '...' === \reset($formatted_parameters)['path']) {
-                continue;
+                // Skip callable assignment
+                if ('...' === $path || '?' === $path) {
+                    continue 2;
+                }
             }
 
             // Get the modifiers

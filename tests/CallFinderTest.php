@@ -1938,6 +1938,66 @@ test(<<<EOF
             ];
         }
 
+        if (KINT_PHP86) {
+            $data['ignore pfa assignment'] = [
+                '<?php
+
+                $x = test(?, "b");test("a", "b");',
+                'line' => 3,
+                'function' => 'test',
+                'result' => [
+                    [
+                        'modifiers' => [],
+                        'parameters' => [
+                            [
+                                'path' => '"a"',
+                                'name' => '"..."',
+                                'expression' => false,
+                                'literal' => true,
+                                'new_without_parens' => false,
+                            ],
+                            [
+                                'path' => '"b"',
+                                'name' => '"..."',
+                                'expression' => false,
+                                'literal' => true,
+                                'new_without_parens' => false,
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+
+            $data['ignore variadic pfa assignment'] = [
+                '<?php
+
+                $x = test("a", ...);test("a", "b");',
+                'line' => 3,
+                'function' => 'test',
+                'result' => [
+                    [
+                        'modifiers' => [],
+                        'parameters' => [
+                            [
+                                'path' => '"a"',
+                                'name' => '"..."',
+                                'expression' => false,
+                                'literal' => true,
+                                'new_without_parens' => false,
+                            ],
+                            [
+                                'path' => '"b"',
+                                'name' => '"..."',
+                                'expression' => false,
+                                'literal' => true,
+                                'new_without_parens' => false,
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+        }
+
         return $data;
     }
 
