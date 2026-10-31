@@ -433,15 +433,9 @@ class Kint implements FacadeInterface
         }
 
         foreach ($miniTrace as $index => $frame) {
-            if ((0 === $index && $callee === $frame) || isset($frame['file'], $frame['line'])) {
-                unset($frame['object'], $frame['args']);
-                $miniTrace[$index] = $frame;
-            } else {
-                unset($miniTrace[$index]);
-            }
+            unset($frame['object'], $frame['args']);
+            $miniTrace[$index] = $frame;
         }
-
-        $miniTrace = \array_values($miniTrace);
 
         $call = static::getSingleCall($callee ?: [], $args);
 

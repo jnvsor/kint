@@ -747,6 +747,7 @@ class KintTest extends KintTestCase
                         'file' => TestClass::DUMP_FILE,
                         'line' => TestClass::DUMP_LINE,
                     ],
+                    ['function' => 'usort'],
                     ...$basetrace,
                 ],
             ],
@@ -769,6 +770,7 @@ class KintTest extends KintTestCase
                 'file' => TestClass::DUMP_FILE,
                 'line' => TestClass::DUMP_LINE,
             ],
+            ['function' => 'usort'],
             ...$basetrace,
         ];
 
