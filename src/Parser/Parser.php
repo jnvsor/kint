@@ -554,6 +554,8 @@ class Parser
      */
     private function applyPluginsBegin(&$var, ContextInterface $c, string $type): ?AbstractValue
     {
+        // TODO
+        /** @psalm-var PluginBeginInterface[] */
         $plugins = $this->plugins[$type][self::TRIGGER_BEGIN] ?? [];
 
         foreach ($plugins as $plugin) {
@@ -576,9 +578,12 @@ class Parser
      * Applies plugins for a parsed AbstractValue.
      *
      * @param mixed &$var The input variable
+     * @param ParserTrigger $trigger
      */
     private function applyPluginsComplete(&$var, AbstractValue $v, int $trigger): AbstractValue
     {
+        // TODO
+        /** @psalm-var PluginCompleteInterface[] */
         $plugins = $this->plugins[$v->getType()][$trigger] ?? [];
 
         foreach ($plugins as $plugin) {

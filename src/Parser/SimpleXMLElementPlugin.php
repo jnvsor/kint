@@ -216,7 +216,7 @@ class SimpleXMLElementPlugin extends AbstractPlugin implements PluginBeginInterf
             $nsap = [];
 
             foreach ($nsChildren as $name => $child) {
-                $base = new ClassOwnedContext((string) $name, SimpleXMLElement::class);
+                $base = new ClassOwnedContext($name, SimpleXMLElement::class);
                 $base->depth = $cdepth + 1;
 
                 if ('' !== $nsAlias) {
@@ -230,10 +230,10 @@ class SimpleXMLElementPlugin extends AbstractPlugin implements PluginBeginInterf
                         $base->access_path = $ap.'->children('.\var_export($nsAlias, true).', true)->';
                     }
 
-                    if (Utils::isValidPhpName((string) $name)) {
-                        $base->access_path .= (string) $name;
+                    if (Utils::isValidPhpName($name)) {
+                        $base->access_path .= $name;
                     } else {
-                        $base->access_path .= '{'.\var_export((string) $name, true).'}';
+                        $base->access_path .= '{'.\var_export($name, true).'}';
                     }
 
                     if (isset($nsap[$base->access_path])) {

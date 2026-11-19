@@ -40,9 +40,6 @@ use Kint\Value\TraceFrameValue;
 use Kint\Value\UninitializedValue;
 
 /**
- * @psalm-consistent-constructor
- * Psalm bug #8523
- *
  * @psalm-import-type CallParameter from CallFinder
  * @psalm-import-type TraceFrame from TraceFrameValue
  *

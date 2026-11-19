@@ -45,10 +45,6 @@ class CallablePlugin extends AbstractPlugin implements ValuePluginInterface
 
         $c = $v->getContext();
 
-        if (!$c instanceof MethodContext) {
-            return null;
-        }
-
         if (!isset(self::$method_cache[$c->owner_class][$c->name])) {
             $children = $this->renderer->renderChildren($v);
 

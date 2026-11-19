@@ -29,7 +29,7 @@ namespace Kint\Value;
 
 use Kint\Value\Context\ContextInterface;
 
-class UninitializedValue extends AbstractValue
+final class UninitializedValue extends AbstractValue
 {
     public function __construct(ContextInterface $context)
     {
