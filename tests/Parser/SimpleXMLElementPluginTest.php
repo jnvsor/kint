@@ -88,19 +88,11 @@ class SimpleXMLElementPluginTest extends KintTestCase
         $reflector = new ReflectionClass($s);
         $mprop = $reflector->getProperty('methods_plugin');
 
-        if (KINT_PHP81 === false) {
-            $mprop->setAccessible(true);
-        }
-
         $m = $mprop->getValue($s);
         $this->assertInstanceOf(ClassMethodsPlugin::class, $m);
 
         $reflector = new ReflectionClass(AbstractPlugin::class);
         $mparser = $reflector->getProperty('parser');
-
-        if (KINT_PHP81 === false) {
-            $mparser->setAccessible(true);
-        }
 
         $p = new Parser();
         $this->assertNotSame($p, $mparser->getValue($m));

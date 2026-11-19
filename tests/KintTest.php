@@ -251,10 +251,8 @@ class KintTest extends KintTestCase
         } catch (Warning $w) {
             if (KINT_PHP833) {
                 $this->assertStringStartsWith('Plugin '.AbstractPlugin::class."@anonymous\0/", $w->getMessage());
-            } elseif (KINT_PHP80) {
-                $this->assertStringStartsWith('Plugin '.AbstractPlugin::class.'@anonymous ', $w->getMessage());
             } else {
-                $this->assertStringStartsWith('Plugin class@anonymous ', $w->getMessage());
+                $this->assertStringStartsWith('Plugin '.AbstractPlugin::class.'@anonymous ', $w->getMessage());
             }
 
             return;

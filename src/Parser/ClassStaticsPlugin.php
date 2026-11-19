@@ -136,10 +136,6 @@ class ClassStaticsPlugin extends AbstractPlugin implements PluginCompleteInterfa
             $context->access_path = '\\'.$context->owner_class.'::$'.$context->name;
         }
 
-        if (KINT_PHP81 === false) {
-            $pr->setAccessible(true); // @codeCoverageIgnore
-        }
-
         /**
          * @psalm-suppress TooFewArguments
          * Appears to have been fixed in master.
@@ -217,7 +213,7 @@ class ClassStaticsPlugin extends AbstractPlugin implements PluginCompleteInterfa
             $cr->getDeclaringClass()->name,
             ClassDeclaredContext::ACCESS_PUBLIC
         );
-        $context->final = KINT_PHP81 && $cr->isFinal();
+        $context->final = $cr->isFinal();
 
         if ($cr->isProtected()) {
             $context->access = ClassDeclaredContext::ACCESS_PROTECTED;

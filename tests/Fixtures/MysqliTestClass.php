@@ -6,5 +6,5 @@ use Mysqli;
 
 class MysqliTestClass extends Mysqli
 {
-    public $affected_rows = 1234;
+    public string|int $affected_rows = 1234;
 }

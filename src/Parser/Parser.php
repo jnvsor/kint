@@ -340,36 +340,6 @@ class Parser
         return $props;
     }
 
-    /**
-     * @codeCoverageIgnore
-     *
-     * @psalm-return ReflectionProperty[]
-     */
-    private function getPropsOrderedOld(ReflectionClass $r): array
-    {
-        $props = [];
-
-        foreach ($r->getProperties() as $prop) {
-            if ($prop->isStatic()) {
-                continue;
-            }
-
-            $props[] = $prop;
-        }
-
-        while ($r = $r->getParentClass()) {
-            foreach ($r->getProperties(ReflectionProperty::IS_PRIVATE) as $prop) {
-                if ($prop->isStatic()) {
-                    continue;
-                }
-
-                $props[] = $prop;
-            }
-        }
-
-        return $props;
-    }
-
     private function parseObject(object &$var, ContextInterface $c): AbstractValue
     {
         $hash = @\spl_object_hash($var);
@@ -413,20 +383,12 @@ class Parser
                 return $this->applyPluginsComplete($var, $object, self::TRIGGER_DEPTH_LIMIT);
             }
 
-            if (KINT_PHP81) {
-                $props = $this->getPropsOrdered($robj);
-            } else {
-                $props = $this->getPropsOrderedOld($robj); // @codeCoverageIgnore
-            }
+            $props = $this->getPropsOrdered($robj);
 
             $values = (array) $var;
             $properties = [];
 
             foreach ($props as $rprop) {
-                if (KINT_PHP81 === false) {
-                    $rprop->setAccessible(true); // @codeCoverageIgnore
-                }
-
                 $name = $rprop->getName();
 
                 // Casting object to array:
@@ -452,7 +414,7 @@ class Parser
                         ClassDeclaredContext::ACCESS_PUBLIC
                     );
 
-                    $child->readonly = KINT_PHP81 && $rprop->isReadOnly();
+                    $child->readonly = $rprop->isReadOnly();
 
                     if ($rprop->isProtected()) {
                         $child->access = ClassDeclaredContext::ACCESS_PROTECTED;

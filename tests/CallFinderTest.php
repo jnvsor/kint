@@ -1464,169 +1464,165 @@ test(<<<EOF
             ],
         ];
 
-        if (KINT_PHP80) {
-            $data['attributes'] = [
-                '<?php
+        $data['attributes'] = [
+            '<?php
 
-                test(new #[TestAttribute] class {});',
-                'line' => 3,
-                'function' => 'test',
-                'result' => [
-                    [
-                        'modifiers' => [],
-                        'parameters' => [
-                            [
-                                'path' => 'new #[TestAttribute] class {}',
-                                'name' => 'new #[...] class {}',
-                                'expression' => !KINT_PHP84,
-                                'literal' => false,
-                                'new_without_parens' => false,
-                            ],
+            test(new #[TestAttribute] class {});',
+            'line' => 3,
+            'function' => 'test',
+            'result' => [
+                [
+                    'modifiers' => [],
+                    'parameters' => [
+                        [
+                            'path' => 'new #[TestAttribute] class {}',
+                            'name' => 'new #[...] class {}',
+                            'expression' => !KINT_PHP84,
+                            'literal' => false,
+                            'new_without_parens' => false,
                         ],
                     ],
                 ],
-            ];
+            ],
+        ];
 
-            $data['nested attributes'] = [
-                '<?php
+        $data['nested attributes'] = [
+            '<?php
 
-                test(new #[TestAttribute(#[TestAttributeChild])] class {});',
-                'line' => 3,
-                'function' => 'test',
-                'result' => [
-                    [
-                        'modifiers' => [],
-                        'parameters' => [
-                            [
-                                'path' => 'new #[TestAttribute(#[TestAttributeChild])] class {}',
-                                'name' => 'new #[...] class {}',
-                                'expression' => !KINT_PHP84,
-                                'literal' => false,
-                                'new_without_parens' => false,
-                            ],
+            test(new #[TestAttribute(#[TestAttributeChild])] class {});',
+            'line' => 3,
+            'function' => 'test',
+            'result' => [
+                [
+                    'modifiers' => [],
+                    'parameters' => [
+                        [
+                            'path' => 'new #[TestAttribute(#[TestAttributeChild])] class {}',
+                            'name' => 'new #[...] class {}',
+                            'expression' => !KINT_PHP84,
+                            'literal' => false,
+                            'new_without_parens' => false,
                         ],
                     ],
                 ],
-            ];
+            ],
+        ];
 
-            $data['nullsafe obj property'] = [
-                '<?php
+        $data['nullsafe obj property'] = [
+            '<?php
 
-                test($args?->prop);',
-                'line' => 3,
-                'function' => 'test',
-                'result' => [
-                    [
-                        'modifiers' => [],
-                        'parameters' => [
-                            [
-                                'path' => '$args?->prop',
-                                'name' => '$args?->prop',
-                                'expression' => false,
-                                'literal' => false,
-                                'new_without_parens' => false,
-                            ],
+            test($args?->prop);',
+            'line' => 3,
+            'function' => 'test',
+            'result' => [
+                [
+                    'modifiers' => [],
+                    'parameters' => [
+                        [
+                            'path' => '$args?->prop',
+                            'name' => '$args?->prop',
+                            'expression' => false,
+                            'literal' => false,
+                            'new_without_parens' => false,
                         ],
                     ],
                 ],
-            ];
+            ],
+        ];
 
-            $data['match'] = [
-                '<?php
+        $data['match'] = [
+            '<?php
 
-                test(match ($a) { 0 => false, default => true });',
-                'line' => 3,
-                'function' => 'test',
-                'result' => [
-                    [
-                        'modifiers' => [],
-                        'parameters' => [
-                            [
-                                'path' => 'match ($a) { 0 => false, default => true }',
-                                'name' => 'match (...) {...}',
-                                'expression' => true,
-                                'literal' => false,
-                                'new_without_parens' => false,
-                            ],
+            test(match ($a) { 0 => false, default => true });',
+            'line' => 3,
+            'function' => 'test',
+            'result' => [
+                [
+                    'modifiers' => [],
+                    'parameters' => [
+                        [
+                            'path' => 'match ($a) { 0 => false, default => true }',
+                            'name' => 'match (...) {...}',
+                            'expression' => true,
+                            'literal' => false,
+                            'new_without_parens' => false,
                         ],
                     ],
                 ],
-            ];
+            ],
+        ];
 
-            $data['named params'] = [
-                '<?php
+        $data['named params'] = [
+            '<?php
 
-                test(abc(paramName: $value));',
-                'line' => 3,
-                'function' => 'test',
-                'result' => [
-                    [
-                        'modifiers' => [],
-                        'parameters' => [
-                            [
-                                'path' => 'abc(paramName: $value)',
-                                'name' => 'abc(...)',
-                                'expression' => false,
-                                'literal' => false,
-                                'new_without_parens' => false,
-                            ],
+            test(abc(paramName: $value));',
+            'line' => 3,
+            'function' => 'test',
+            'result' => [
+                [
+                    'modifiers' => [],
+                    'parameters' => [
+                        [
+                            'path' => 'abc(paramName: $value)',
+                            'name' => 'abc(...)',
+                            'expression' => false,
+                            'literal' => false,
+                            'new_without_parens' => false,
                         ],
                     ],
                 ],
-            ];
+            ],
+        ];
 
-            $data['named params in helper'] = [
-                '<?php
+        $data['named params in helper'] = [
+            '<?php
 
-                +test(data: $value);',
-                'line' => 3,
-                'function' => 'test',
-                'result' => [
-                    [
-                        'modifiers' => ['+'],
-                        'parameters' => [],
-                    ],
+            +test(data: $value);',
+            'line' => 3,
+            'function' => 'test',
+            'result' => [
+                [
+                    'modifiers' => ['+'],
+                    'parameters' => [],
                 ],
-            ];
+            ],
+        ];
 
-            $data['mixed named params and ternary in helper'] = [
-                '<?php
+        $data['mixed named params and ternary in helper'] = [
+            '<?php
 
-                -test($a ? $b : $c, data: $value);',
-                'line' => 3,
-                'function' => 'test',
-                'result' => [
-                    [
-                        'modifiers' => ['-'],
-                        'parameters' => [],
-                    ],
+            -test($a ? $b : $c, data: $value);',
+            'line' => 3,
+            'function' => 'test',
+            'result' => [
+                [
+                    'modifiers' => ['-'],
+                    'parameters' => [],
                 ],
-            ];
-        }
+            ],
+        ];
 
-        if (KINT_PHP81) {
-            $data['ignore firstclass callables'] = [
-                '<?php
+        $data['ignore firstclass callables'] = [
+            '<?php
 
-                $x = test(...); test($a);',
-                'line' => 3,
-                'function' => 'test',
-                'result' => [
-                    [
-                        'modifiers' => [],
-                        'parameters' => [
-                            [
-                                'path' => '$a',
-                                'name' => '$a',
-                                'expression' => false,
-                                'literal' => false,
-                                'new_without_parens' => false,
-                            ],
+            $x = test(...); test($a);',
+            'line' => 3,
+            'function' => 'test',
+            'result' => [
+                [
+                    'modifiers' => [],
+                    'parameters' => [
+                        [
+                            'path' => '$a',
+                            'name' => '$a',
+                            'expression' => false,
+                            'literal' => false,
+                            'new_without_parens' => false,
                         ],
                     ],
                 ],
-            ];
-        }
+            ],
+        ];
 
         if (KINT_PHP82) {
             $data['dnf types'] = [

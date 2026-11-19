@@ -25,10 +25,6 @@ declare(strict_types=1);
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-if (KINT_PHP81) {
-    \class_alias(Kint\Test\Fixtures\Mysqli81TestClass::class, Kint\Test\Fixtures\MysqliTestClass::class);
-}
-
 if (KINT_PHP82) {
     $error_reporting = \error_reporting();
     \error_reporting($error_reporting & ~E_DEPRECATED);

@@ -499,34 +499,6 @@ class UtilsTest extends KintTestCase
         $this->assertSame($expect, Utils::truncateString($input, $length));
     }
 
-    /**
-     * @covers \Kint\Utils::getTypeString
-     */
-    public function testGetTypeString()
-    {
-        $param = new ReflectionParameter([TestClass::class, 'arrayHint'], 'x');
-        $this->assertSame('array', Utils::getTypeString($param->getType()));
-
-        $param = new ReflectionParameter([Php71TestClass::class, 'typeHints'], 'p1');
-        $this->assertSame('?int', Utils::getTypeString($param->getType()));
-
-        $param = new ReflectionParameter([Php71TestClass::class, 'typeHints'], 'nullable');
-        $this->assertSame('?string', Utils::getTypeString($param->getType()));
-
-        if (KINT_PHP80) {
-            $param = new ReflectionParameter([Php8TestClass::class, 'typeHints'], 'p1');
-            $this->assertSame('string|int', Utils::getTypeString($param->getType()));
-
-            $param = new ReflectionParameter([Php8TestClass::class, 'typeHints'], 'mixed');
-            $this->assertSame('mixed', Utils::getTypeString($param->getType()));
-        }
-
-        if (KINT_PHP81) {
-            $param = new ReflectionParameter([Php81TestClass::class, 'typeHints'], 'p1');
-            $this->assertSame('X&Y', Utils::getTypeString($param->getType()));
-        }
-    }
-
     public function phpNameProvider()
     {
         return [

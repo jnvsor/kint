@@ -85,9 +85,7 @@ class DeclaredCallableBagTest extends KintTestCase
         $b = new DeclaredCallableBag(new ReflectionMethod(Php71TestClass::class, 'returnTypeHint'));
         $this->assertSame('?Kint\\Test\\Fixtures\\TestClass', $b->returntype);
 
-        if (KINT_PHP80) {
-            $b = new DeclaredCallableBag(new ReflectionMethod(Php8TestClass::class, 'typeHints'));
-            $this->assertSame('?static', $b->returntype);
-        }
+        $b = new DeclaredCallableBag(new ReflectionMethod(Php8TestClass::class, 'typeHints'));
+        $this->assertSame('?static', $b->returntype);
     }
 }

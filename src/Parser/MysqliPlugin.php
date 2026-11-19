@@ -42,15 +42,13 @@ use Throwable;
  */
 class MysqliPlugin extends AbstractPlugin implements PluginCompleteInterface
 {
-    // These 'properties' are actually globals
     public const ALWAYS_READABLE = [
+        // These 'properties' are actually globals
         'client_version' => true,
         'connect_errno' => true,
         'connect_error' => true,
-    ];
 
-    // These are readable on empty mysqli objects, but not on failed connections
-    public const EMPTY_READABLE = [
+        // These are not (Somehow)
         'client_info' => true,
         'errno' => true,
         'error' => true,
@@ -98,24 +96,7 @@ class MysqliPlugin extends AbstractPlugin implements PluginCompleteInterface
             return $v;
         }
 
-        /**
-         * @psalm-var ?string $var->sqlstate
-         * @psalm-var ?string $var->client_info
-         * Psalm bug #4502
-         */
-        try {
-            $connected = \is_string(@$var->sqlstate);
-        } catch (Throwable $t) {
-            $connected = false;
-        }
-
-        try {
-            $empty = !$connected && \is_string(@$var->client_info);
-        } catch (Throwable $t) { // @codeCoverageIgnore
-            // Only possible in PHP 8.0. Before 8.0 there's no exception,
-            // after 8.1 there are no failed connection objects
-            $empty = false; // @codeCoverageIgnore
-        }
+        $connected = isset($var->sqlstate);
 
         $parser = $this->getParser();
 
@@ -131,34 +112,24 @@ class MysqliPlugin extends AbstractPlugin implements PluginCompleteInterface
             }
 
             if (isset(self::CONNECTED_READABLE[$c->getName()])) {
-                $c->readonly = KINT_PHP81;
+                $c->readonly = true;
                 if (!$connected) {
-                    // No failed connections after PHP 8.1
-                    continue; // @codeCoverageIgnore
-                }
-            } elseif (isset(self::EMPTY_READABLE[$c->getName()])) {
-                $c->readonly = KINT_PHP81;
-                // No failed connections after PHP 8.1
-                if (!$connected && !$empty) { // @codeCoverageIgnore
-                    continue; // @codeCoverageIgnore
+                    // No failed connections after PHP 8.1, this must be an empty mysqli object
+                    continue;
                 }
             } elseif (!isset(self::ALWAYS_READABLE[$c->getName()])) {
+                // If someone subclassed \mysqli
                 continue; // @codeCoverageIgnore
             }
 
-            $c->readonly = KINT_PHP81;
+            $c->readonly = true;
 
             // Only handle unparsed properties
-            if ((KINT_PHP81 ? 'uninitialized' : 'null') !== $obj->getType()) {
+            if ('uninitialized' !== $obj->getType()) {
                 continue;
             }
 
             $param = $var->{$c->getName()};
-
-            // If it really was a null
-            if (!KINT_PHP81 && null === $param) {
-                continue; // @codeCoverageIgnore
-            }
 
             $new_contents[$key] = $parser->parse($param, $c);
         }

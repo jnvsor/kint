@@ -69,7 +69,7 @@ final class DeclaredCallableBag
 
         $rt = $callable->getReturnType();
         if ($rt) {
-            $this->returntype = Utils::getTypeString($rt);
+            $this->returntype = (string) $rt;
         }
 
         $parameters = [];

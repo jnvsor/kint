@@ -390,27 +390,15 @@ class ParserTest extends KintTestCase
 
         $this->assertCount(7, $props);
 
-        if (!KINT_PHP81) {
-            $props = [
-                'pub2' => $props[0],
-                'pro2' => $props[1],
-                'pri2' => $props[2],
-                'pro' => $props[3],
-                'pub' => $props[4],
-                'dynadded' => $props[5],
-                'pri' => $props[6],
-            ];
-        } else {
-            $props = [
-                'pub' => $props[0],
-                'pro' => $props[1],
-                'pri' => $props[2],
-                'pub2' => $props[3],
-                'pro2' => $props[4],
-                'pri2' => $props[5],
-                'dynadded' => $props[6],
-            ];
-        }
+        $props = [
+            'pub' => $props[0],
+            'pro' => $props[1],
+            'pri' => $props[2],
+            'pub2' => $props[3],
+            'pro2' => $props[4],
+            'pri2' => $props[5],
+            'dynadded' => $props[6],
+        ];
 
         $this->assertSame('pub', $props['pub']->getDisplayName());
         $this->assertSame('pub', $props['pub']->getContext()->getName());
@@ -479,7 +467,7 @@ class ParserTest extends KintTestCase
 
         $o = $p->parse($v, $b);
 
-        $uninit_g = $o->getChildren()[KINT_PHP81 ? 6 : 7];
+        $uninit_g = $o->getChildren()[6];
 
         $this->assertInstanceOf(UninitializedValue::class, $uninit_g);
         $this->assertSame('uninitialized', $uninit_g->getType());
@@ -541,15 +529,7 @@ class ParserTest extends KintTestCase
 
         $this->assertSame((\count($expected) - 5) * 2, $pluginCount);
 
-        // Different order before 8.1
-        if (KINT_PHP81) {
-            $expected = \array_values($expected);
-        } else {
-            $last = $expected['last'];
-            $c = $expected['c'];
-            unset($expected['c'], $expected['last']);
-            \array_unshift($expected, $c, $last);
-        }
+        $expected = \array_values($expected);
 
         $arraycast = (array) $v;
 
@@ -613,10 +593,6 @@ class ParserTest extends KintTestCase
      */
     public function testParseObjectReadonly()
     {
-        if (!KINT_PHP81) {
-            $this->markTestSkipped('Not testing readonly properties below PHP 8.1');
-        }
-
         $p = new Parser();
         $b = new BaseContext('Object');
         $b->access_path = '$v';

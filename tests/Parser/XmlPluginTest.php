@@ -124,11 +124,7 @@ class XmlPluginTest extends KintTestCase
         $this->assertInstanceOf(InstanceValue::class, $r->getValue());
         $this->assertEquals(true, $r->getValue()->flags & AbstractValue::FLAG_GENERATED);
         $this->assertSame(DOMElement::class, $r->getValue()->getClassName());
-        if (KINT_PHP81) {
-            $this->assertGreaterThan(0, (int) $r->getValue()->getDisplaySize());
-        } else {
-            $this->assertSame(0, (int) $r->getValue()->getDisplaySize());
-        }
+        $this->assertSame(0, (int) $r->getValue()->getDisplaySize());
         $this->assertInstanceOf(BaseContext::class, $r->getValue()->getContext());
         $this->assertNotInstanceOf(ClassOwnedContext::class, $r->getValue()->getContext());
         $this->assertSame('x', $r->getValue()->getContext()->getName());

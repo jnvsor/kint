@@ -84,31 +84,6 @@ class ClassMethodsPluginTest extends KintTestCase
             MethodParentTestClass::class.'::test8' => null,
         ];
 
-        // Different order in 7.4
-        if (!KINT_PHP80) {
-            $base_methods = [
-                'test1' => '$v->test1()',
-                'test9' => '$v->test9()',
-                'test5' => null,
-                'test11' => null,
-                MethodParentTestClass::class.'::__CONSTRUCT' => null,
-                'test3' => '$v->test3()',
-                MethodParentTestClass::class.'::test7' => null,
-                MethodParentTestClass::class.'::test5' => null,
-            ];
-            $base_static_methods = [
-                MethodChildTestClass::class.'::test2' => null,
-                MethodChildTestClass::class.'::test10' => null,
-                MethodChildTestClass::class.'::test6' => null,
-                MethodChildTestClass::class.'::test12' => null,
-                MethodParentTestClass::class.'::make' => null,
-                MethodParentTestClass::class.'::test4' => null,
-                MethodParentTestClass::class.'::test8' => null,
-                MethodParentTestClass::class.'::test2' => null,
-                MethodParentTestClass::class.'::test6' => null,
-            ];
-        }
-
         $child_methods = $base_methods;
         $child_methods['test5'] = '$v->test5()';
         $child_methods['test11'] = '$v->test11()';
