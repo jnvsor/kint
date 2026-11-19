@@ -302,14 +302,14 @@ final class Utils
     }
 
     /**
-     * trigger_error before PHP 8.1 truncates the error message at nul
+     * trigger_error before PHP 8.3.3 truncates the error message at nul
      * so we have to sanitize variable strings before using them.
      *
      * @psalm-pure
      */
     public static function errorSanitizeString(string $input): string
     {
-        if (KINT_PHP82 || '' === $input) {
+        if (KINT_PHP833 || '' === $input) {
             return $input;
         }
 

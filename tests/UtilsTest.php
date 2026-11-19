@@ -610,7 +610,7 @@ class UtilsTest extends KintTestCase
     {
         $input = "Hello\0World";
 
-        if (KINT_PHP82) {
+        if (KINT_PHP833) {
             $this->assertSame($input, Utils::errorSanitizeString($input));
         } else {
             $this->assertSame('Hello', Utils::errorSanitizeString($input));
