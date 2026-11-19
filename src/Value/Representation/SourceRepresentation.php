@@ -68,8 +68,6 @@ class SourceRepresentation extends AbstractRepresentation
 
     /**
      * @psalm-api
-     *
-     * @psalm-return non-empty-string
      */
     public function getSourceSlice(): string
     {

@@ -30,7 +30,6 @@ namespace Kint\Renderer\Rich;
 use Kint\Renderer\RichRenderer;
 use Kint\Utils;
 use Kint\Value\AbstractValue;
-use Kint\Value\Context\MethodContext;
 use Kint\Value\MethodValue;
 
 class CallablePlugin extends AbstractPlugin implements ValuePluginInterface
@@ -44,10 +43,6 @@ class CallablePlugin extends AbstractPlugin implements ValuePluginInterface
         }
 
         $c = $v->getContext();
-
-        if (!$c instanceof MethodContext) {
-            return null;
-        }
 
         if (!isset(self::$method_cache[$c->owner_class][$c->name])) {
             $children = $this->renderer->renderChildren($v);

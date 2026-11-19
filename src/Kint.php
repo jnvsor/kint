@@ -40,9 +40,6 @@ use Kint\Value\TraceFrameValue;
 use Kint\Value\UninitializedValue;
 
 /**
- * @psalm-consistent-constructor
- * Psalm bug #8523
- *
  * @psalm-import-type CallParameter from CallFinder
  * @psalm-import-type TraceFrame from TraceFrameValue
  *
@@ -56,6 +53,9 @@ use Kint\Value\UninitializedValue;
  * }
  *
  * @psalm-api
+ *
+ * @psalm-consistent-constructor
+ * Psalm #14492
  */
 class Kint implements FacadeInterface
 {
@@ -261,6 +261,10 @@ class Kint implements FacadeInterface
         $output = $this->renderer->preRender();
 
         foreach ($vars as $key => $_) {
+            /**
+             * @psalm-suppress DocblockTypeContradiction
+             * Psalm #14469
+             */
             if (!$base[$key] instanceof ContextInterface) {
                 throw new InvalidArgumentException('Kint::dumpAll requires all elements of the second argument to be ContextInterface instances');
             }
@@ -625,8 +629,8 @@ class Kint implements FacadeInterface
 
                             foreach ($keys as $key) {
                                 $call['parameters'][] = [
-                                    'name' => ((string) \substr($param['name'], 3)).'['.\var_export($key, true).']',
-                                    'path' => ((string) \substr($param['path'], 3)).'['.\var_export($key, true).']',
+                                    'name' => \substr($param['name'], 3).'['.\var_export($key, true).']',
+                                    'path' => \substr($param['path'], 3).'['.\var_export($key, true).']',
                                     'expression' => false,
                                     'literal' => false,
                                     'new_without_parens' => false,
@@ -637,8 +641,8 @@ class Kint implements FacadeInterface
                             // through array_values so we can't access them directly at all
                             for ($j = 0; $j + $i < $argc; ++$j) {
                                 $call['parameters'][] = [
-                                    'name' => 'array_values('.((string) \substr($param['name'], 3)).')['.$j.']',
-                                    'path' => 'array_values('.((string) \substr($param['path'], 3)).')['.$j.']',
+                                    'name' => 'array_values('.\substr($param['name'], 3).')['.$j.']',
+                                    'path' => 'array_values('.\substr($param['path'], 3).')['.$j.']',
                                     'expression' => false,
                                     'literal' => false,
                                     'new_without_parens' => false,

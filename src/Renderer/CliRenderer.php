@@ -28,8 +28,12 @@ declare(strict_types=1);
 namespace Kint\Renderer;
 
 use Kint\Value\AbstractValue;
+use Kint\Value\StringValue;
 use Throwable;
 
+/**
+ * @psalm-import-type Encoding from StringValue
+ */
 class CliRenderer extends TextRenderer
 {
     /**
@@ -167,6 +171,14 @@ class CliRenderer extends TextRenderer
         return parent::postRender();
     }
 
+    /**
+     * @psalm-param Encoding $encoding
+     *
+     * @psalm-taint-specialize
+     *
+     * @psalm-taint-escape html
+     * @psalm-taint-escape has_quotes
+     */
     public function escape(string $string, $encoding = false): string
     {
         return \str_replace("\x1b", '\\x1b', $string);

@@ -29,7 +29,11 @@ namespace Kint\Renderer;
 
 use Kint\Utils;
 use Kint\Value\AbstractValue;
+use Kint\Value\StringValue;
 
+/**
+ * @psalm-import-type Encoding from StringValue
+ */
 class PlainRenderer extends TextRenderer
 {
     use AssetRendererTrait;
@@ -184,6 +188,14 @@ class PlainRenderer extends TextRenderer
         return '<a href="'.$this->escape($ideLink).'">'.$path.'</a>';
     }
 
+    /**
+     * @psalm-param Encoding $encoding
+     *
+     * @psalm-taint-specialize
+     *
+     * @psalm-taint-escape html
+     * @psalm-taint-escape has_quotes
+     */
     public function escape(string $string, $encoding = false): string
     {
         if (false === $encoding) {

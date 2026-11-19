@@ -76,6 +76,9 @@ abstract class AbstractRenderer implements ConstructableRendererInterface
         return '';
     }
 
+    /**
+     * @psalm-taint-escape url_scheme
+     */
     public static function getFileLink(string $file, int $line): ?string
     {
         if (null === self::$file_link_format) {

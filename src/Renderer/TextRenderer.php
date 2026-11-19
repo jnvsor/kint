@@ -333,6 +333,11 @@ class TextRenderer extends AbstractRenderer
 
     /**
      * @psalm-param Encoding $encoding
+     *
+     * @psalm-taint-specialize
+     *
+     * @psalm-taint-escape html
+     * @psalm-taint-escape has_quotes
      */
     public function escape(string $string, $encoding = false): string
     {

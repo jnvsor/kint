@@ -404,12 +404,7 @@ final class Utils
             }
         }
 
-        // Special case for substr/mb_substr discrepancy
-        if ('' === $string) {
-            return '';
-        }
-
-        return (string) \substr($string, $start, $length ?? PHP_INT_MAX);
+        return \substr($string, $start, $length ?? PHP_INT_MAX);
     }
 
     public static function shortenPath(string $file): string

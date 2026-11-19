@@ -3,8 +3,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
-    findUnusedBaselineEntry="true"
     findUnusedCode="true"
+    ensureOverrideAttribute="false"
+    strictBinaryOperands="false"
 >
     <enableExtensions>
         <!-- Reflection lies! -->
@@ -23,6 +24,19 @@
     </projectFiles>
 
     <issueHandlers>
+        <ClassMustBeFinal errorLevel="info"/>
         <Trace errorLevel="error"/>
+
+        <!-- Suppress include guarded PHP calls -->
+        <UndefinedMethod>
+            <errorLevel type="suppress">
+                <referencedMethod name="ReflectionProperty::isFinal"/>
+                <referencedMethod name="ReflectionProperty::isVirtual"/>
+                <referencedMethod name="ReflectionProperty::getHooks"/>
+                <referencedMethod name="ReflectionProperty::isProtectedSet"/>
+                <referencedMethod name="ReflectionProperty::isPrivateSet"/>
+                <referencedMethod name="ReflectionProperty::getSettableType"/>
+            </errorLevel>
+        </UndefinedMethod>
     </issueHandlers>
 </psalm>

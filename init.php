@@ -59,7 +59,14 @@ if (isset($_SERVER['DOCUMENT_ROOT']) && false === \strpos($_SERVER['DOCUMENT_ROO
 
     // Suppressed for unreadable document roots (related to open_basedir)
     if (false !== @\realpath($_SERVER['DOCUMENT_ROOT'])) {
-        /** @psalm-suppress InvalidPropertyAssignmentValue */
+        /**
+         * The phar may load this file in the global scope, so I don't want to
+         * declare variables here and pollute it. Suppress false positive errors
+         * instead.
+         *
+         * @psalm-suppress PossiblyInvalidArrayOffset
+         * @psalm-suppress InvalidPropertyAssignmentValue
+         */
         Utils::$path_aliases[\realpath($_SERVER['DOCUMENT_ROOT'])] = '<ROOT>';
     }
 }

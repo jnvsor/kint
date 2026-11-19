@@ -253,7 +253,7 @@ class CallFinder
 
             // Check if it's a function call
             $nextReal = self::realTokenIndex($tokens, $index);
-            if ('(' !== ($tokens[$nextReal] ?? null)) {
+            if (null !== $nextReal && '(' !== ($tokens[$nextReal] ?? null)) {
                 continue;
             }
 

@@ -31,17 +31,23 @@ trait AssetRendererTrait
 {
     public static ?string $theme = null;
 
-    /** @psalm-var array{js?:string, css?:array<path, false|string>} */
+    /** @psalm-var array{js?:false|string, css?:array<string, false|string>} */
     private static array $assetCache = [];
 
     /** @psalm-api */
-    public static function renderJs(): string
+    public static function renderJs(): ?string
     {
         if (!isset(self::$assetCache['js'])) {
             self::$assetCache['js'] = \file_get_contents(KINT_DIR.'/resources/compiled/main.js');
         }
 
-        return self::$assetCache['js'];
+        $contents = self::$assetCache['js'];
+
+        if (false === $contents) {
+            return null;
+        }
+
+        return $contents;
     }
 
     /** @psalm-api */
@@ -61,10 +67,12 @@ trait AssetRendererTrait
             }
         }
 
-        if (false === self::$assetCache['css'][self::$theme]) {
+        $contents = self::$assetCache['css'][self::$theme];
+
+        if (false === $contents) {
             return null;
         }
 
-        return self::$assetCache['css'][self::$theme];
+        return $contents;
     }
 }

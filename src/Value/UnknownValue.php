@@ -29,7 +29,7 @@ namespace Kint\Value;
 
 use Kint\Value\Context\ContextInterface;
 
-class UnknownValue extends AbstractValue
+final class UnknownValue extends AbstractValue
 {
     public function __construct(ContextInterface $context)
     {
