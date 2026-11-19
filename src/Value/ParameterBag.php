@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 namespace Kint\Value;
 
-use Kint\Utils;
 use ReflectionParameter;
 
 final class ParameterBag
@@ -49,7 +48,7 @@ final class ParameterBag
         $this->position = $param->getPosition();
         $this->ref = $param->isPassedByReference();
 
-        $this->type_hint = ($type = $param->getType()) ? Utils::getTypeString($type) : null;
+        $this->type_hint = ($type = $param->getType()) ? ((string) $type) : null;
 
         if ($param->isDefaultValueAvailable()) {
             $default = $param->getDefaultValue();

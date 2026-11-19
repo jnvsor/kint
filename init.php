@@ -33,14 +33,12 @@ if (\defined('KINT_DIR')) {
     return;
 }
 
-if (\version_compare(PHP_VERSION, '7.4') < 0) {
-    throw new Exception('Kint 6 requires PHP 7.4 or higher');
+if (\version_compare(PHP_VERSION, '8.1') < 0) {
+    throw new Exception('Kint 7 requires PHP 8.1 or higher');
 }
 
 \define('KINT_DIR', __DIR__);
 \define('KINT_WIN', DIRECTORY_SEPARATOR !== '/');
-\define('KINT_PHP80', \version_compare(PHP_VERSION, '8.0') >= 0);
-\define('KINT_PHP81', \version_compare(PHP_VERSION, '8.1') >= 0);
 \define('KINT_PHP82', \version_compare(PHP_VERSION, '8.2') >= 0);
 \define('KINT_PHP83', \version_compare(PHP_VERSION, '8.3') >= 0);
 \define('KINT_PHP833', \version_compare(PHP_VERSION, '8.3.3') >= 0);

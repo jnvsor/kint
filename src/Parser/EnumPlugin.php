@@ -44,10 +44,6 @@ class EnumPlugin extends AbstractPlugin implements PluginCompleteInterface
 
     public function getTriggers(): int
     {
-        if (!KINT_PHP81) {
-            return Parser::TRIGGER_NONE;
-        }
-
         return Parser::TRIGGER_SUCCESS;
     }
 

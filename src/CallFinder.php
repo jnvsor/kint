@@ -82,6 +82,7 @@ class CallFinder
         T_LOGICAL_AND => true,
         T_LOGICAL_OR => true,
         T_LOGICAL_XOR => true,
+        T_MATCH => true,
         T_MINUS_EQUAL => true,
         T_MOD_EQUAL => true,
         T_MUL_EQUAL => true,
@@ -133,17 +134,22 @@ class CallFinder
         ']' => true,
         '{' => true,
         '}' => true,
-        T_OBJECT_OPERATOR => true,
         T_DOUBLE_COLON => true,
         T_NS_SEPARATOR => true,
+        T_NULLSAFE_OBJECT_OPERATOR => true,
+        T_OBJECT_OPERATOR => true,
     ];
 
     private static array $classcalls = [
         T_DOUBLE_COLON => true,
+        T_NULLSAFE_OBJECT_OPERATOR => true,
         T_OBJECT_OPERATOR => true,
     ];
 
     private static array $namespace = [
+        T_NAME_FULLY_QUALIFIED => true,
+        T_NAME_QUALIFIED => true,
+        T_NAME_RELATIVE => true,
         T_STRING => true,
     ];
 
@@ -160,6 +166,7 @@ class CallFinder
             '(' => true,
             '[' => true,
             '{' => true,
+            T_ATTRIBUTE => true,
             T_CURLY_OPEN => true,
             T_DOLLAR_OPEN_CURLY_BRACES => true,
         ];
@@ -177,22 +184,12 @@ class CallFinder
         ];
         static $identifier = [
             T_DOUBLE_COLON => true,
-            T_STRING => true,
+            T_NAME_FULLY_QUALIFIED => true,
+            T_NAME_QUALIFIED => true,
+            T_NAME_RELATIVE => true,
             T_NS_SEPARATOR => true,
+            T_STRING => true,
         ];
-
-        if (KINT_PHP80) {
-            $up[T_ATTRIBUTE] = true;
-            self::$operator[T_MATCH] = true;
-            self::$strip[T_NULLSAFE_OBJECT_OPERATOR] = true;
-            self::$classcalls[T_NULLSAFE_OBJECT_OPERATOR] = true;
-            self::$namespace[T_NAME_FULLY_QUALIFIED] = true;
-            self::$namespace[T_NAME_QUALIFIED] = true;
-            self::$namespace[T_NAME_RELATIVE] = true;
-            $identifier[T_NAME_FULLY_QUALIFIED] = true;
-            $identifier[T_NAME_QUALIFIED] = true;
-            $identifier[T_NAME_RELATIVE] = true;
-        }
 
         if (!KINT_PHP84) {
             self::$operator[T_NEW] = true; // @codeCoverageIgnore
@@ -655,7 +652,7 @@ class CallFinder
 
         if (T_FUNCTION === $tokens[0][0] ||
             T_FN === $tokens[0][0] ||
-            (KINT_PHP80 && T_MATCH === $tokens[0][0])
+            T_MATCH === $tokens[0][0]
         ) {
             $ignorestrip = true;
         }
@@ -690,7 +687,7 @@ class CallFinder
                 $token[1] = ' ';
                 $space = true;
             } else {
-                if (KINT_PHP80 && null !== $last && T_ATTRIBUTE === $last[0]) {
+                if (null !== $last && T_ATTRIBUTE === $last[0]) {
                     $attribute = true;
                 }
 

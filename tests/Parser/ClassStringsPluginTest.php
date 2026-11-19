@@ -55,27 +55,15 @@ class ClassStringsPluginTest extends KintTestCase
         $reflector = new ReflectionClass($d);
         $mprop = $reflector->getProperty('methods_plugin');
 
-        if (KINT_PHP81 === false) {
-            $mprop->setAccessible(true);
-        }
-
         $m = $mprop->getValue($d);
         $this->assertInstanceOf(ClassMethodsPlugin::class, $m);
         $sprop = $reflector->getProperty('statics_plugin');
-
-        if (KINT_PHP81 === false) {
-            $sprop->setAccessible(true);
-        }
 
         $s = $sprop->getValue($d);
         $this->assertInstanceOf(ClassStaticsPlugin::class, $s);
 
         $reflector = new ReflectionClass(AbstractPlugin::class);
         $aparser = $reflector->getProperty('parser');
-
-        if (KINT_PHP81 === false) {
-            $aparser->setAccessible(true);
-        }
 
         $p = new Parser();
         $this->assertNotSame($p, $aparser->getValue($m));

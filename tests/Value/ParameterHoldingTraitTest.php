@@ -47,11 +47,7 @@ class ParameterHoldingTraitTest extends KintTestCase
     public function testGetParams()
     {
         $m = new DeclaredCallableBag(new ReflectionFunction('explode'));
-        if (KINT_PHP80) {
-            $this->assertSame('string $separator, string $string, int $limit = '.PHP_INT_MAX, $m->getParams());
-        } else {
-            $this->assertSame('$separator, $str, $limit', $m->getParams());
-        }
+        $this->assertSame('string $separator, string $string, int $limit = '.PHP_INT_MAX, $m->getParams());
 
         $m = new DeclaredCallableBag(new ReflectionMethod(TestClass::class, 'arrayHint'));
         $this->assertSame('array $x', $m->getParams());
@@ -75,14 +71,10 @@ class ParameterHoldingTraitTest extends KintTestCase
         $m = new DeclaredCallableBag(new ReflectionMethod(Php7TestClass::class, 'typeHints'));
         $this->assertSame('string $p1, int $p2, bool $p3 = false, int $p4 = 0, int $p5 = 1', $m->getParams());
 
-        if (KINT_PHP80) {
-            $m = new DeclaredCallableBag(new ReflectionMethod(Php8TestClass::class, 'typeHints'));
-            $this->assertSame('string|int $p1, ?int $p2, bool $p3 = false, ?string $nullable = null, string|int|null $nullable2 = null, mixed $mixed = null, $untyped = null', $m->getParams());
-        }
+        $m = new DeclaredCallableBag(new ReflectionMethod(Php8TestClass::class, 'typeHints'));
+        $this->assertSame('string|int $p1, ?int $p2, bool $p3 = false, ?string $nullable = null, string|int|null $nullable2 = null, mixed $mixed = null, $untyped = null', $m->getParams());
 
-        if (KINT_PHP81) {
-            $m = new DeclaredCallableBag(new ReflectionMethod(Php81TestClass::class, 'typeHints'));
-            $this->assertSame('X&Y $p1, $p2 = object(Kint\\Test\\Fixtures\\Php81TestClass)', $m->getParams());
-        }
+        $m = new DeclaredCallableBag(new ReflectionMethod(Php81TestClass::class, 'typeHints'));
+        $this->assertSame('X&Y $p1, $p2 = object(Kint\\Test\\Fixtures\\Php81TestClass)', $m->getParams());
     }
 }

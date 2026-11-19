@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 namespace Kint\Value;
 
-use Kint\Utils;
 use ReflectionFunctionAbstract;
 
 /** @psalm-api */
@@ -69,7 +68,7 @@ final class DeclaredCallableBag
 
         $rt = $callable->getReturnType();
         if ($rt) {
-            $this->returntype = Utils::getTypeString($rt);
+            $this->returntype = (string) $rt;
         }
 
         $parameters = [];

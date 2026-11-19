@@ -25,17 +25,13 @@ declare(strict_types=1);
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-if (KINT_PHP81) {
-    \class_alias(Kint\Test\Fixtures\Mysqli81TestClass::class, Kint\Test\Fixtures\MysqliTestClass::class);
-}
-
 if (KINT_PHP82) {
     $error_reporting = \error_reporting();
     \error_reporting($error_reporting & ~E_DEPRECATED);
 
-    \class_exists(Kint\Test\Fixtures\TestClass::class);
-    \class_exists(Kint\Test\Fixtures\Php71TestClass::class);
-    \class_exists(Kint\Test\Fixtures\Php8TestClass::class);
+    // \class_exists(Kint\Test\Fixtures\TestClass::class);
+    // \class_exists(Kint\Test\Fixtures\Php71TestClass::class);
+    // \class_exists(Kint\Test\Fixtures\Php8TestClass::class);
 
     \error_reporting($error_reporting);
     unset($error_reporting);

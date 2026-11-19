@@ -293,10 +293,6 @@ class ClassStaticsPluginTest extends KintTestCase
      */
     public function testParseEnumConstant()
     {
-        if (!KINT_PHP81) {
-            $this->markTestSkipped('Not testing final consts below PHP 8.1');
-        }
-
         $p = new Parser(5);
 
         $b = new BaseContext('$v');
@@ -346,10 +342,6 @@ class ClassStaticsPluginTest extends KintTestCase
      */
     public function testParseFinalConst()
     {
-        if (!KINT_PHP81) {
-            $this->markTestSkipped('Not testing ClassStaticsPlugin on enums below PHP 8.1');
-        }
-
         $p = new Parser(5);
         $p->addPlugin(new ClassStaticsPlugin($p));
 

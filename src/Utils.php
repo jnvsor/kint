@@ -29,9 +29,6 @@ namespace Kint;
 
 use Kint\Value\StringValue;
 use Kint\Value\TraceFrameValue;
-use ReflectionNamedType;
-use ReflectionType;
-use UnexpectedValueException;
 
 /**
  * A collection of utility methods. Should all be static methods with no dependencies.
@@ -314,29 +311,6 @@ final class Utils
         }
 
         return (string) \strtok($input, "\0"); // @codeCoverageIgnore
-    }
-
-    /** @psalm-pure */
-    public static function getTypeString(ReflectionType $type): string
-    {
-        // @codeCoverageIgnoreStart
-        // ReflectionType::__toString was deprecated in 7.4 and undeprecated in 8
-        // and toString doesn't correctly show the nullable ? in the type before 8
-        if (!KINT_PHP80) {
-            if (!$type instanceof ReflectionNamedType) {
-                throw new UnexpectedValueException('ReflectionType on PHP 7 must be ReflectionNamedType');
-            }
-
-            $name = $type->getName();
-            if ($type->allowsNull() && 'mixed' !== $name && false === \strpos($name, '|')) {
-                $name = '?'.$name;
-            }
-
-            return $name;
-        }
-        // @codeCoverageIgnoreEnd
-
-        return (string) $type;
     }
 
     /**

@@ -147,18 +147,6 @@ class DomPlugin extends AbstractPlugin implements PluginBeginInterface
         'nextElementSibling' => true,
     ];
 
-    public const DOM_VERSIONS = [
-        'parentElement' => KINT_PHP83,
-        'isConnected' => KINT_PHP83,
-        'className' => KINT_PHP83,
-        'id' => KINT_PHP83,
-        'firstElementChild' => KINT_PHP80,
-        'lastElementChild' => KINT_PHP80,
-        'childElementCount' => KINT_PHP80,
-        'previousElementSibling' => KINT_PHP80,
-        'nextElementSibling' => KINT_PHP80,
-    ];
-
     /**
      * List of properties to skip parsing.
      *
@@ -400,7 +388,7 @@ class DomPlugin extends AbstractPlugin implements PluginBeginInterface
         foreach (self::getKnownProperties($var) as $prop => $readonly) {
             $prop_c = new PropertyContext($prop, $class, ClassDeclaredContext::ACCESS_PUBLIC);
             $prop_c->depth = $cdepth + 1;
-            $prop_c->readonly = KINT_PHP81 && $readonly;
+            $prop_c->readonly = $readonly;
 
             if (null !== $ap) {
                 $prop_c->access_path = $ap.'->'.$prop;
@@ -453,52 +441,37 @@ class DomPlugin extends AbstractPlugin implements PluginBeginInterface
      */
     public static function getKnownProperties(object $var): array
     {
-        if (KINT_PHP81) {
-            $r = new ReflectionClass($var);
-            $classname = $r->getName();
+        $r = new ReflectionClass($var);
+        $classname = $r->getName();
 
-            if (!isset(self::$property_cache[$classname])) {
-                self::$property_cache[$classname] = [];
+        if (!isset(self::$property_cache[$classname])) {
+            self::$property_cache[$classname] = [];
 
-                foreach ($r->getProperties() as $prop) {
-                    $declaring = $prop->getDeclaringClass()->getName();
-                    $name = $prop->name;
+            foreach ($r->getProperties() as $prop) {
+                $declaring = $prop->getDeclaringClass()->getName();
+                $name = $prop->name;
 
-                    if (\in_array($declaring, [Node::class, Element::class], true)) {
-                        $readonly = self::NODE_PROPS[$name] ?? self::ELEMENT_PROPS[$name];
-                    } elseif (\in_array($declaring, [DOMNode::class, DOMElement::class], true)) {
-                        $readonly = self::DOMNODE_PROPS[$name] ?? self::DOMELEMENT_PROPS[$name];
-                    } else {
-                        continue;
-                    }
-
-                    self::$property_cache[$classname][$prop->name] = $readonly;
+                if (\in_array($declaring, [Node::class, Element::class], true)) {
+                    $readonly = self::NODE_PROPS[$name] ?? self::ELEMENT_PROPS[$name];
+                } elseif (\in_array($declaring, [DOMNode::class, DOMElement::class], true)) {
+                    $readonly = self::DOMNODE_PROPS[$name] ?? self::DOMELEMENT_PROPS[$name];
+                } else {
+                    continue;
                 }
 
-                if ($var instanceof Document) {
-                    self::$property_cache[$classname]['textContent'] = true;
-                }
-
-                if ($var instanceof Attr || $var instanceof CharacterData) {
-                    self::$property_cache[$classname]['nodeValue'] = false;
-                }
+                self::$property_cache[$classname][$prop->name] = $readonly;
             }
 
-            $known_properties = self::$property_cache[$classname];
-        } else {
-            // @codeCoverageIgnoreStart
-            $known_properties = self::DOMNODE_PROPS;
-            if ($var instanceof DOMElement) {
-                $known_properties += self::DOMELEMENT_PROPS;
+            if ($var instanceof Document) {
+                self::$property_cache[$classname]['textContent'] = true;
             }
 
-            foreach (self::DOM_VERSIONS as $key => $val) {
-                if (false === $val) {
-                    unset($known_properties[$key]);
-                }
+            if ($var instanceof Attr || $var instanceof CharacterData) {
+                self::$property_cache[$classname]['nodeValue'] = false;
             }
-            // @codeCoverageIgnoreEnd
         }
+
+        $known_properties = self::$property_cache[$classname];
 
         /** @psalm-var non-empty-array $known_properties */
         if (!self::$verbose) {

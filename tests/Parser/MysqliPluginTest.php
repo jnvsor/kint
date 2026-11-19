@@ -80,7 +80,7 @@ class MysqliPluginTest extends KintTestCase
 
         $this->assertNotEmpty($obj1->getChildren());
         foreach ($obj1->getChildren() as $obj) {
-            $this->assertSame(KINT_PHP81 ? 'uninitialized' : 'null', $obj->getType());
+            $this->assertSame('uninitialized', $obj->getType());
         }
 
         $m = new MysqliPlugin($p);
@@ -94,7 +94,7 @@ class MysqliPluginTest extends KintTestCase
         foreach ($obj2->getChildren() as $obj) {
             // Values can be actual nulls below 8.1 so we can't check this there
             $this->assertNotSame('uninitialized', $obj->getType());
-            $this->assertSame(KINT_PHP81, $obj->getContext()->readonly);
+            $this->assertTrue($obj->getContext()->readonly);
         }
     }
 
@@ -134,10 +134,6 @@ class MysqliPluginTest extends KintTestCase
      */
     public function testParseFailedConnection()
     {
-        if (KINT_PHP81) {
-            $this->markTestSkipped('PHP 8.1 throws exception on failed connection');
-        }
-
         $p = new Parser();
         $v = $this->getRealMysqliFailedConnection();
         $base = new BaseContext('$v');
@@ -199,7 +195,7 @@ class MysqliPluginTest extends KintTestCase
 
         $this->assertNotEmpty($obj1->getChildren());
         foreach ($obj1->getChildren() as $obj) {
-            $this->assertSame(KINT_PHP81 ? 'uninitialized' : 'null', $obj->getType());
+            $this->assertSame('uninitialized', $obj->getType());
         }
 
         $m = new MysqliPlugin($p);
@@ -214,9 +210,9 @@ class MysqliPluginTest extends KintTestCase
             $objname = $obj->getContext()->getName();
             if (isset(MysqliPlugin::EMPTY_READABLE[$objname]) || isset(MysqliPlugin::ALWAYS_READABLE[$objname])) {
                 $this->assertNotSame('uninitialized', $obj->getType());
-                $this->assertSame(KINT_PHP81, $obj->getContext()->readonly);
+                $this->assertTrue($obj->getContext()->readonly);
             } else {
-                $this->assertSame(KINT_PHP81 ? 'uninitialized' : 'null', $obj->getType());
+                $this->assertSame('uninitialized', $obj->getType());
             }
         }
     }
@@ -252,7 +248,7 @@ class MysqliPluginTest extends KintTestCase
                     $this->assertSame('string', $obj->getType());
                     break;
                 default:
-                    $this->assertSame(KINT_PHP81 ? 'uninitialized' : 'null', $obj->getType());
+                    $this->assertSame('uninitialized', $obj->getType());
                     break;
             }
         }
@@ -271,7 +267,7 @@ class MysqliPluginTest extends KintTestCase
                 $this->assertNotInstanceOf(PropertyContext::class, \get_class($obj->getContext()));
             } else {
                 $this->assertInstanceOf(PropertyContext::class, $obj->getContext());
-                $this->assertSame(KINT_PHP81, $obj->getContext()->readonly);
+                $this->assertTrue($obj->getContext()->readonly);
             }
         }
     }
@@ -290,54 +286,24 @@ class MysqliPluginTest extends KintTestCase
         $v_empty = new Mysqli();
         $obj_empty = $p->parse($v_empty, clone $base);
 
-        if (!KINT_PHP81) {
-            $v_bad = $this->getRealMysqliFailedConnection();
-            $obj_bad = $p->parse($v_bad, clone $base);
-            $obj_empty_after_bad = $p->parse($v_empty, clone $base);
-        }
-
         $v_good = $this->getRealMysqliConnection();
         $obj_good = $p->parse($v_good, clone $base);
         $obj_empty_after_good = $p->parse($v_empty, clone $base);
 
         // Compare some stuff
         $obj_comparisons = [$obj_empty, $obj_empty_after_good];
-        if (!KINT_PHP81) {
-            $obj_comparisons[] = $obj_empty_after_bad;
-        }
+
         foreach ($obj_comparisons as $obj) {
             $this->assertNotEmpty($obj->getChildren());
             $found = 0;
             foreach ($obj->getChildren() as $child) {
                 switch ($child->getContext()->getName()) {
                     case 'affected_rows':
-                        $this->assertSame(KINT_PHP81 ? 'uninitialized' : 'null', $child->getType());
+                        $this->assertSame('uninitialized', $child->getType());
                         $found |= 1;
                         break;
                     case 'client_info':
                         $this->assertSame('string', $child->getType());
-                        $found |= 2;
-                        break;
-                    case 'client_version':
-                        $this->assertSame('integer', $child->getType());
-                        $found |= 4;
-                        break;
-                }
-            }
-            $this->assertSame(1 | 2 | 4, $found);
-        }
-
-        if (!KINT_PHP81) {
-            $this->assertNotEmpty($obj_bad->getChildren());
-            $found = 0;
-            foreach ($obj_bad->getChildren() as $child) {
-                switch ($child->getContext()->getName()) {
-                    case 'affected_rows':
-                        $this->assertSame(KINT_PHP81 ? 'uninitialized' : 'null', $child->getType());
-                        $found |= 1;
-                        break;
-                    case 'client_info':
-                        $this->assertSame(KINT_PHP81 ? 'uninitialized' : 'null', $child->getType());
                         $found |= 2;
                         break;
                     case 'client_version':
@@ -405,15 +371,6 @@ class MysqliPluginTest extends KintTestCase
         if ($m->connect_errno) {
             $this->markTestSkipped('Mysqli connection error. Check connection information in phpunit.xml');
         }
-
-        return $m;
-    }
-
-    protected function getRealMysqliFailedConnection()
-    {
-        @$m = new Mysqli(\getenv('MYSQLI_HOST'), \getenv('MYSQLI_USER'), \getenv('MYSQLI_PASS').'fail');
-
-        $this->assertNotFalse($m->connect_errno);
 
         return $m;
     }
